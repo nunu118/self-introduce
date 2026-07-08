@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: self-introduce
+  jpa:
+    hibernate:
+      ddl-auto: update
