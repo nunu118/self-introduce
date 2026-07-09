@@ -1,4 +1,4 @@
-package com.yeonwoo.self_introduce.common;
+package com.yeonwoo.self_introduce.repository;
 
 import org.springframework.stereotype.Repository;
 

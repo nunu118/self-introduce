@@ -1,10 +1,11 @@
-package com.yeonwoo.self_introduce.common;
+package com.yeonwoo.self_introduce.controller;
 
+import com.yeonwoo.self_introduce.service.SelfIntroduceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:35729")
 
 public class SelfIntroduceController {
     @Autowired
@@ -12,6 +13,7 @@ public class SelfIntroduceController {
 
     @GetMapping("/api/main")
     public String home() {
+
         return "안녕하세요";
     }
 

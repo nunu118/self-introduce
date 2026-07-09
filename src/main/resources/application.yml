@@ -4,3 +4,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  admin:
+    username: admin
+    password: 1234
+
+app:
+  cors:
+    allowed-origin=http://localhost:35729:
