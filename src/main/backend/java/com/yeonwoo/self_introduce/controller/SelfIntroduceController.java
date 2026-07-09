@@ -1,39 +1,37 @@
 package com.yeonwoo.self_introduce.controller;
 
+import com.yeonwoo.self_introduce.dto.CreateDto;
 import com.yeonwoo.self_introduce.service.SelfIntroduceService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:35729")
+@RequestMapping("/api/main")
+@RequiredArgsConstructor
 
 public class SelfIntroduceController {
-    @Autowired
-    SelfIntroduceService selfIntroduceService;
+    private final SelfIntroduceService selfIntroduceService;
 
-    @GetMapping("/api/main")
-    public String home() {
-
-        return "안녕하세요";
+    @GetMapping(value = "/", name = "main")
+    public ResponseEntity<String> main() {
+        return ResponseEntity.ok(selfIntroduceService.home());
     }
 
-    @PostMapping("/api/main")
-    public String create() {
-        return "등록이 완료되었습니다";
+    @PostMapping(value = "/register")
+    public ResponseEntity<String> registerUser(@RequestBody CreateDto createDto) {
+        return ResponseEntity.ok(selfIntroduceService.home());
     }
 
-    @PutMapping("/api/main")
-    public String update() {
-        return "수정이 완료되었습니다";
+    @PutMapping("/main")
+    public User updateUser(@RequestBody User user) {
+        return user;
     }
 
-    @DeleteMapping("/api/main")
-    public String delete() {
-        return "삭제가 완료되었습니다";
+    @DeleteMapping("/main")
+    public User deleteUser(@RequestBody User user) {
+        return user;
     }
 
-    @PatchMapping("/api/main")
-    public String patch() {
-        return "변경이 완료되었습니다";
-    }
 }
