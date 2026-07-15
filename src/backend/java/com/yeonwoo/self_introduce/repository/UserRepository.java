@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     public List<User> findAll();
-    public List<User> findByPhone(Integer phone);
+    public List<User> findByPhone(String phone);
     public List<User> findByEmail(String email);
     public List<User> findByEncryptedEmail(String encryptedEmail);
     public List<User> findByEncryptedPhone(String encryptedphone);

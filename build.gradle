@@ -13,6 +13,17 @@ java {
 	}
 }
 
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src/backend/java']
+		}
+		resources {
+			srcDirs = ['src/backend/resources']
+		}
+	}
+}
+
 repositories {
 	mavenCentral()
 }

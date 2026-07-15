@@ -1,4 +1,4 @@
 package com.yeonwoo.self_introduce.dto;
 
-public class UpdateDto {
+public class ProjectUpdateRequest {
 }
