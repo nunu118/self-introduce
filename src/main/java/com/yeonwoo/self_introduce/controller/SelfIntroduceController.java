@@ -1,6 +1,6 @@
 package com.yeonwoo.self_introduce.controller;
 
-import com.yeonwoo.self_introduce.dto.CreateDto;
+import com.yeonwoo.self_introduce.dto.ProjectCreateRequest;
 import com.yeonwoo.self_introduce.service.SelfIntroduceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class SelfIntroduceController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<String> registerUser(@RequestBody CreateDto createDto) {
+    public ResponseEntity<String> registerUser(@RequestBody ProjectCreateRequest createRequest) {
         return ResponseEntity.ok(selfIntroduceService.home());
     }
 

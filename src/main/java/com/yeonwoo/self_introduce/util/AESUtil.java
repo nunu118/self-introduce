@@ -1,4 +1,4 @@
-package com.yeonwoo.self_introduce.common;
+package com.yeonwoo.self_introduce.util;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;

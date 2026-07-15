@@ -1,6 +1,6 @@
 package com.yeonwoo.self_introduce.dto;
 
-public class CreateDto {
+public class ProjectCreateRequest {
     private String name;
     private String email;
     private String password;

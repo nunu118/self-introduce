@@ -1,6 +1,6 @@
 package com.yeonwoo.self_introduce.service;
 
-import com.yeonwoo.self_introduce.common.AESUtil;
+import com.yeonwoo.self_introduce.util.AESUtil;
 import com.yeonwoo.self_introduce.entity.User;
 import com.yeonwoo.self_introduce.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
