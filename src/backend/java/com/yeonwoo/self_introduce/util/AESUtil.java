@@ -4,8 +4,11 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
+
+import static javax.crypto.Cipher.SECRET_KEY;
 
 public class AESUtil {
     private static final String ALGORITHM = "AES";
@@ -14,12 +17,14 @@ public class AESUtil {
 
     // 환경변수에서 32바이트(256qlxm) 비밀키 코드
     // 시스템 환경변수에 'AES_SECRET_KEY' 이름으로 32글자 키 등록
-    private static final String SECRET_KEY = System.getenv("AES_SECRET_KEY");
+    private static final byte[] KEY_BYTES = System.getenv("AES_SECRET_KEY") != null
+            ? System.getenv("AES_SECRET_KEY").getBytes(StandardCharsets.UTF_8)
+            : null;
 
     // 암호화 : 랜덤 IV 생성 > 암호화 > IV(16바이트) + 암호문 결합 > Base64 인코딩
     public static String encrypt(String plainText) throws Exception {
-        if (SECRET_KEY == null || SECRET_KEY.getBytes().length != 32) {
-            throw new IllegalStateException("환경변수 'AES SECRET_KEY'가 설정되지 않았거나 32바이트가 아닙니다.");
+        if (KEY_BYTES == null || KEY_BYTES.length != 32) {
+            throw new IllegalStateException("환경변수 'AES SECRET_KEY'가 설정되지 않았거나 UTF-8 기준 32바이트가 아닙니다.");
         }
 
         // 매번 안전한 랜덤 IV 생성
@@ -28,13 +33,13 @@ public class AESUtil {
         random.nextBytes(iv);
         IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
-        // 비밀키 및 CIpher 초기화 작업
-        SecretKeySpec keySpec = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
+        // 비밀키 및 CIpher 초기화 작업 (KEY_BYTES 직접 사용)
+        SecretKeySpec keySpec = new SecretKeySpec(KEY_BYTES, ALGORITHM);
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
 
-        // 평문 암호화
-        byte[] encryptedBytes = cipher.doFinal(plainText.getBytes());
+        // 평문 암호화 시 UTF_8 명시
+        byte[] encryptedBytes = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
 
         // IV(16바이트) + 암호문 데이터 하나로 결합
         ByteBuffer buffer = ByteBuffer.allocate(iv.length + encryptedBytes.length);
@@ -47,8 +52,8 @@ public class AESUtil {
 
     // 복호화 : Base64 디코딩 > 앞 16바이트 IV 분리 > 나머지 데이터 복호화
     public static String decrypt(String cipherText) throws Exception {
-        if (SECRET_KEY == null || SECRET_KEY.getBytes().length == 32) {
-            throw new IllegalStateException("환경변수 'AES_SECRET_KEY'가 설정되지 않았거나 32바이트가 아닙니다.");
+        if (KEY_BYTES == null || KEY_BYTES.length != 32) {
+            throw new IllegalStateException("환경변수 'AES_SECRET_KEY'가 설정되지 않았거나 UTF_8 기준 32바이트가 아닙니다.");
         }
         // Base64 전체 디코딩
         byte[] totalBytes = Base64.getDecoder().decode(cipherText);
@@ -66,12 +71,12 @@ public class AESUtil {
         System.arraycopy(totalBytes, IV_SIZE, encryptedBytes, 0, encryptedSize);
 
         // 비밀키, Cipher 초기화
-        SecretKeySpec keySpec = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
+        SecretKeySpec keySpec = new SecretKeySpec(KEY_BYTES, ALGORITHM);
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
 
-        // 복호화 후 문자열 반환
+        // 복호화 후 문자열 반환 시 UTF-8 명시
         byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
-        return new String(decryptedBytes);
+        return new String(decryptedBytes, StandardCharsets.UTF_8);
     }
 }
