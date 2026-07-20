@@ -1,9 +1,6 @@
 package com.yeonwoo.self_introduce.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SelfIntroduce {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 }
