@@ -40,8 +40,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Preflight 요청 허용
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        // 조회(GET)는 누구나 가능
-                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
                         // 관리자 페이지는 ADMIN 권한만 접근 가능
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         // 정적 리소스는 누구나 접근 가능
@@ -53,6 +51,8 @@ public class SecurityConfig {
                                 "/favicon.ico",
                                 "/error"
                         ).permitAll()
+                        // 조회(GET)는 누구나 가능
+                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
                         // 나머지 인증 필요
                         .anyRequest().authenticated()
                 )
