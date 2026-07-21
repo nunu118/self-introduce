@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 
@@ -27,24 +28,22 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                // HTTP Basic 인증 활성화 (관리자 페이지 보호)
-                .httpBasic(Customizer.withDefaults())
-
-                // CORS 정책 적용
-                .cors(Customizer.withDefaults())
-
                 // REST API는 session 기반이 아니므로 비활성화
                 .csrf(csrf -> csrf.disable())
-
+                // session 생성, 사용 안함
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // HTTP Basic 인증 활성화 (관리자 페이지 보호)
+                .httpBasic(Customizer.withDefaults())
+                // CORS 정책 적용
+                .cors(Customizer.withDefaults())
                 // URL 접근 권한 설정
                 .authorizeHttpRequests(auth -> auth
-
-                        // 관리자 페이지는 ADMIN 권한만 접근 가능
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-
                         // Preflight 요청 허용
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
+                        // 조회(GET)는 누구나 가능
+                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                        // 관리자 페이지는 ADMIN 권한만 접근 가능
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         // 정적 리소스는 누구나 접근 가능
                         .requestMatchers(
                                 "/",
@@ -54,10 +53,6 @@ public class SecurityConfig {
                                 "/favicon.ico",
                                 "/error"
                         ).permitAll()
-
-                        // 조회(GET)는 누구나 가능
-                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
-
                         // 나머지 인증 필요
                         .anyRequest().authenticated()
                 )
