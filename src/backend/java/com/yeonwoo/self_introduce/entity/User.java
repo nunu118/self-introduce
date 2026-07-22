@@ -1,33 +1,31 @@
 package com.yeonwoo.self_introduce.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.io.Serial;
-import java.io.Serializable;
 
 @Entity
+@Table(name = "users")
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본 생성자 접근 제어
 
-// Serializable 인터페이스를 사용 시
-// 기존 Springboot 서버 재구동시 별도로 작성한 클래스는 자동으로 제거되나
-// Serializable 인터페이스 구현 시 자동으로 제거되지 않음
 
-public class User implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String password;
-    private String role;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
+
     private String image;
     private String address;
     private String email;
@@ -35,17 +33,26 @@ public class User implements Serializable {
     private String encryptedEmail;
     private String encryptedPhone;
 
-
-
     public enum UserRole{
         ADMIN, USER
     }
 
-    public String getRole() {
-        return role.trim().toUpperCase();
-    }
-    public String setRole(String role) {
-        return role.trim().toUpperCase();
+    @Builder
+    public User(String name, String password, String email, String encryptedEmail, String encryptedPhone, UserRole role) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.encryptedEmail = encryptedEmail;
+        this.encryptedPhone = encryptedPhone;
+        this.role = role != null ? role : UserRole.USER;
     }
 
+    // 프로필 정보 수정 메서드
+    public void updateProfile(String name, String email, String phone, String image, String address) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.image = image;
+        this.address = address;
+    }
 }

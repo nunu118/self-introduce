@@ -17,15 +17,20 @@ public class UserService {
     }
 
     // 회원가입 또는 개인정보 저장 시 호출
-    public void registerUser(String email, String phone) throws Exception {
+    public void registerUser(String name, String password, String email, String phone) throws Exception {
         // 암호화 적용
         String encryptedEmail = AESUtil.encrypt(email);
         String encryptedPhone = AESUtil.encrypt(phone);
 
-        // User Entity 객체 생성, 값 세팅
-        User user = new User();
-        user.setEmail(encryptedEmail);
-        user.setPhone(encryptedPhone);
+        // Builder 객체 생성, 값 세팅
+        User user = User.builder()
+                .name(name)
+                .password(password)
+                .email(email)
+                .encryptedEmail(encryptedEmail)
+                .encryptedPhone(encryptedPhone)
+                .role(User.UserRole.USER)
+                .build();
 
         userRepository.save(user);
     }
