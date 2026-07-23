@@ -5,13 +5,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    public List<User> findAll();
-    public List<User> findByPhone(String phone);
-    public List<User> findByEmail(String email);
-    public List<User> findByEncryptedEmail(String encryptedEmail);
-    public List<User> findByEncryptedPhone(String encryptedphone);
+    // 중복 가입 체크를 위한 존재 확인
+    boolean existsByEmail(String email);
+
+    // Optional로 리턴 타입 지정
+    Optional<User> findByEmail(String email);
+    Optional<User> findByPhone(String phone);
+    Optional<User> findByEncryptedEmail(String encryptedEmail);
+    Optional<User> findByEncryptedPhone(String encryptedPhone);
 }

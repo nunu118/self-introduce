@@ -14,6 +14,16 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        log.warn("Business Exception: {} - {}", errorCode.name(), e.getMessage());
+
+        return ResponseEntity
+                .status(errorCode.getStatus()) // enum에 설정된 400, 404등 적용
+                .body(ErrorResponse.of(errorCode));
+    }
+
     // 400 Bad Request : 비즈니스 로직 상의 잘못된 인자 전달 (ex. 유효성 검사 실패)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException e) {

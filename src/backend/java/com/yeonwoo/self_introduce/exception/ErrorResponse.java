@@ -10,4 +10,8 @@ public record ErrorResponse(
     public ErrorResponse(int status, String message) {
         this(status, message, LocalDateTime.now());
     }
+
+    public static ErrorResponse of(ErrorCode errorCode) {
+        return new ErrorResponse(errorCode.getStatus(), errorCode.getMessage());
+    }
 }
