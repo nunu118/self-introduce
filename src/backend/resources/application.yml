@@ -18,7 +18,3 @@ spring:
 admin:
   username:  admin
   password:  921218
-
-app:
-  cors:
-    allowed-origin:  "http://localhost:35729"
